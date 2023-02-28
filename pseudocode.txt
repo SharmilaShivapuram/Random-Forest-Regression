@@ -1,0 +1,97 @@
+-----------------------------/PSEUDOCODE FOR RANDOM FOREST REGRESSOR/----------------------------
+
+
+### RANDOM  FOREST REGRESSION
+Random Forest Regression is a supervised machine learning algorithm that uses ensemble learning method for regression. 
+It combines multiple number of decision trees. 
+In the case of a regression problem, the final output is the mean of all the outputs.
+
+### HOUSE PRICE PREDICTION
+We all have experienced a time when we have to look up for a new house to buy. 
+But then the journey begins with a lot of frauds, negotiating deals, researching the local areas and so on.
+The task in the dataset is to predict the quality of wine using the given data. 
+
+### Importing Libraries
+Here we are using
+ Numpy – To perform mathematical operations on arrays.
+ Pandas – To load the Data frame.
+ Matplotlib – To visualize the data features.
+ Seaborn – To see the correlation between features using heat map.
+
+### LOAD THE DATASET
+data = load_dataset()
+The dataset contains 13 features and 2919 rows.
+
+### Exploratory Data Analysis – EDA
+ Command .shape shows Total rows and columns present in the data.
+ Command .info() gives the information about the data type
+ Command .describe() is used to view some of the basic statistical details like percentile, mean, std, count, min and max values.
+ Command .isnull().sum() shows the presence of null values in each column.
+
+Here we are using different plots for visualizations like Histogram, Scatter plot,Count plot, Bar plot, Box plot etc.
+Preprocessing
+
+### Identifying and Filling the Null values
+1 Filling the numeric null values with mean
+   numeric.fillna(numeric.mean())
+2 Imputing categorical null values with Most_frequent
+SimpleImputer – one of the methods to fill the null values
+
+imputer = SimpleImputer(strategy="mode")
+train_data = imputer.fit_transform(train_data)
+test_data = imputer.transform(test_data)
+
+### Encoding Categorical Data
+pd.get_dummies() – dummifies the cateregorical variables
+
+
+Splitting Dataset into Training & Test set
+    a. Select the first n samples for the training set, where n is the calculated number of samples
+    b. Select the remaining samples for the test set
+train_data, test_data = train_test_split(data, test_size=test_size)
+
+### MODEL BUILDING
+
+Set the hyperparameters of the random forest classifier
+      a. Number of decision trees (n_estimators)
+      b. Maximum depth of decision trees (max_depth)
+      c. Minimum number of samples required to split an internal node (min_samples_split)
+      d. Minimum number of samples required to be at a leaf node (min_samples_leaf)
+  
+Initialize an empty list to store the decision trees.
+For i in range(n_estimators): 
+
+ a. Draw a random sample of the input features. 
+    sample_features(X, num_features):
+    return random.sample(X.columns, num_features)
+
+ b. Create a decision tree using the random sample of features with max_depth, 
+              min_samples_split and min samples leaf. 
+   RF(X, Y, num_trees, max_depth, num_features, min_samples_split):
+    forest = []
+    for i in range(num_trees):
+        # Create a new decision tree for each iteration
+        tree = DecisionTree(X, Y, max_depth, num_features, min_samples_split)
+        forest.append(tree)
+    return forest
+  ##Train the decision tree on training data X_train and y_train
+    tree.fit(X_train, y_train)
+
+ c. Append the decision tree to the list of decision trees.
+    decision_trees.append(tree)
+
+Initialize an empty array of size (n_samples, n_estimators) to store the predictions of each decision tree.
+For i in range(n_estimators): 
+  a. Use the i-th decision tree to predict the target variable y.
+     Predict function calculates the average prediction from all the trees In the forest.
+     y_pred = rf_regressor.predict(X_test) 
+  b. Store the predicted values in the i-th column of the array of predictions.
+Compute the average of the predictions across all decision trees to obtain the final prediction.
+Return the final prediction y_pred.
+
+### Evaluate the model using Mean Squared Error and R-squared metrics
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print('Mean Squared Error:', mse)
+print('R-squared:', r2)
